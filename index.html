@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeopardy Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: #F2A900;">Jeopardy Game</h1>
+        <div class="team-input">
+            <input type="text" id="team1Name" placeholder="Enter Team 1 Name">
+            <input type="text" id="team2Name" placeholder="Enter Team 2 Name">
+            <button id="startGameButton">Start Game</button>
+        </div>
+        <div class="scores">
+            <div id="team1" style="color: #F2A900;"></div>
+            <div id="team2" style="color: #F2A900;"></div>
+        </div>
+        <div class="categories" style="display: none;">
+            <h2 style="color: #F2A900;">Select a Category</h2>
+            <div class="categoryButton" data-category="Math" data-points="100">Math - 100</div>
+            <div class="categoryButton" data-category="Math" data-points="200">Math - 200</div>
+            <div class="categoryButton" data-category="Science" data-points="100">Science - 100</div>
+            <div class="categoryButton" data-category="Science" data-points="200">Science - 200</div>
+            <div class="categoryButton" data-category="History" data-points="100">History - 100</div>
+            <div class="categoryButton" data-category="History" data-points="200">History - 200</div>
+            <div class="categoryButton" data-category="Geography" data-points="100">Geography - 100</div>
+            <div class="categoryButton" data-category="Geography" data-points="200">Geography - 200</div>
+            <div class="categoryButton" data-category="English" data-points="100">English - 100</div>
+            <div class="categoryButton" data-category="English" data-points="200">English - 200</div>
+        </div>
+        <div id="questionText" style="color: #F2A900;">Select a category and point value to view a question.</div>
+        <button id="answerButton" style="display: none;">Show Answer</button>
+        <div id="responseButtons" style="display: none;">
+            <button id="correctButton">Correct</button>
+            <button id="incorrectButton">Incorrect</button>
+        </div>
+        <div id="gameMessage" style="color: #F2A900;"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+body {
+    background-color: #861F41;
+    color: #F2A900;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    text-align: center;
+    margin: 20px;
+}
+
+.team-input {
+    margin-bottom: 20px;
+}
+
+.team-scores {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+.team-score {
+    width: 45%;
+}
+
+.categories {
+    display: none;
+}
+
+.categoryButton {
+    background-color: #F2A900;
+    color: #861F41;
+    border: none;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+#responseButtons {
+    margin-top: 20px;
+}
+
+button {
+    margin: 5px;
+}
+
+#answerButton {
+    margin-top: 20px;
+}
