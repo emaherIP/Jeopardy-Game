@@ -1,37 +1,92 @@
+/* General Styles */
 body {
-    font-family: Arial, sans-serif;
     background-color: #861F41;
     color: #F2A900;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
 }
 
-button {
-    background-color: #F2A900;
-    color: #861F41;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-#team-setup, #scoreboard {
-    margin: 20px;
-}
-
-#game-board {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
+h1 {
     margin-top: 20px;
-}
-
-.category, .question-button {
-    background-color: #F2A900;
-    color: #861F41;
-    padding: 10px;
-    font-size: 1.2em;
 }
 
 .hidden {
     display: none;
+}
+
+/* Team Setup */
+#team-setup {
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    padding: 5px;
+    margin: 5px;
+    border: 2px solid #F2A900;
+    background-color: #861F41;
+    color: #F2A900;
+}
+
+/* Game Board */
+#game-board table {
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+#game-board th, #game-board td {
+    padding: 10px;
+    border: 1px solid #F2A900;
+    width: 100px;
+    height: 60px;
+    color: #F2A900;
+    background-color: #861F41;
+}
+
+#game-board button {
+    background-color: #F2A900;
+    color: #861F41;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#game-board button:hover {
+    background-color: #dca951;
+}
+
+/* Question Display */
+#question-display {
+    padding: 20px;
+    border: 2px solid #F2A900;
+    background-color: #861F41;
+    width: 80%;
+    max-width: 500px;
+}
+
+#question-text, #answer-text {
+    margin-bottom: 10px;
+}
+
+#show-answer, #correct, #incorrect {
+    background-color: #F2A900;
+    color: #861F41;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+#show-answer:hover, #correct:hover, #incorrect:hover {
+    background-color: #dca951;
+}
+
+/* Scoreboard */
+#scoreboard {
+    margin: 20px;
+    font-size: 1.2em;
 }
