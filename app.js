@@ -1,118 +1,117 @@
-document.addEventListener("DOMContentLoaded", () => {
-    let teamScores = { team1: 0, team2: 0 };
-    let currentQuestion = null;
-    let categories = {};
+document.getElementById("start-game").addEventListener("click", startGame);
 
-    const teamSetup = document.getElementById("team-setup");
-    const scoreboard = document.getElementById("scoreboard");
-    const gameBoard = document.getElementById("game-board");
-    const questionDisplay = document.getElementById("question-display");
+let categories = [];
+let questions = {};
+let currentQuestion = null;
+let teamScores = { team1: 0, team2: 0 };
 
-    document.getElementById("start-game").onclick = () => {
-        const team1Name = document.getElementById("team1-name-input").value || "Team 1";
-        const team2Name = document.getElementById("team2-name-input").value || "Team 2";
+// Start the game by loading categories and questions from the CSV file
+function startGame() {
+    const team1Name = document.getElementById("team1-name").value || "Team 1";
+    const team2Name = document.getElementById("team2-name").value || "Team 2";
+    document.getElementById("team1-score").innerText = `${team1Name}: 0`;
+    document.getElementById("team2-score").innerText = `${team2Name}: 0`;
+    
+    loadQuestionsFromCSV();
+    document.getElementById("game-board").style.display = "block";
+    document.getElementById("team-setup").style.display = "none";
+}
 
-        document.getElementById("team1-name").textContent = team1Name;
-        document.getElementById("team2-name").textContent = team2Name;
-
-        teamSetup.classList.add("hidden");
-        scoreboard.classList.remove("hidden");
-
-        fetch('questions.csv')
-            .then(response => response.ok ? response.text() : Promise.reject("Failed to load CSV"))
-            .then(data => loadQuestions(data))
-            .catch(error => console.error('Error loading CSV:', error));
-    };
-
-    function loadQuestions(csvData) {
-        const questions = parseCSV(csvData);
-        categories = organizeQuestionsByCategory(questions);
-        renderBoard(categories);
+// Load questions from CSV file
+async function loadQuestionsFromCSV() {
+    try {
+        const response = await fetch("questions.csv");
+        const data = await response.text();
+        parseCSVData(data);
+        setupBoard();
+    } catch (error) {
+        console.error("Error loading CSV:", error);
     }
+}
 
-    function parseCSV(data) {
-        const rows = data.trim().split('\n');
-        return rows.slice(1).map(row => {
-            const [category, points, question, answer] = row.split(',');
-            return { category, points: parseInt(points), question, answer };
+// Parse CSV data
+function parseCSVData(data) {
+    const rows = data.trim().split("\n");
+    categories = rows[0].split(",").slice(1);  // First row, excluding "Point Value"
+    
+    rows.slice(1).forEach(row => {
+        const cells = row.split(",");
+        const pointValue = cells[0];
+        
+        categories.forEach((category, index) => {
+            const questionAnswer = cells[index + 1].split("|");
+            const question = questionAnswer[0];
+            const answer = questionAnswer[1];
+            
+            if (!questions[category]) questions[category] = {};
+            if (!questions[category][pointValue]) questions[category][pointValue] = [];
+            
+            questions[category][pointValue].push({ question, answer });
         });
-    }
+    });
+}
 
-    function organizeQuestionsByCategory(questions) {
-        const organized = {};
-        questions.forEach(q => {
-            if (!organized[q.category]) organized[q.category] = {};
-            if (!organized[q.category][q.points]) organized[q.category][q.points] = [];
-            organized[q.category][q.points].push(q);
+// Setup the game board UI
+function setupBoard() {
+    const categoryRow = document.getElementById("category-row");
+    categoryRow.innerHTML = categories.map(category => `<th>${category}</th>`).join("");
+    
+    const pointsGrid = document.getElementById("points-grid");
+    pointsGrid.innerHTML = "";
+    [100, 200, 300, 400, 500].forEach(pointValue => {
+        const row = document.createElement("tr");
+        categories.forEach(category => {
+            const cell = document.createElement("td");
+            const button = document.createElement("button");
+            button.textContent = `$${pointValue}`;
+            button.onclick = () => showQuestion(category, pointValue);
+            cell.appendChild(button);
+            row.appendChild(cell);
         });
-        return organized;
-    }
+        pointsGrid.appendChild(row);
+    });
+}
 
-    function renderBoard(categories) {
-        gameBoard.innerHTML = '';
-        gameBoard.classList.remove("hidden");
+// Display a question
+function showQuestion(category, pointValue) {
+    const questionData = questions[category][pointValue];
+    const randomIndex = Math.floor(Math.random() * questionData.length);
+    currentQuestion = questionData[randomIndex];
+    
+    document.getElementById("question-text").innerText = currentQuestion.question;
+    document.getElementById("answer-text").style.display = "none";
+    document.getElementById("answer-button").style.display = "inline";
+    document.getElementById("question-display").style.display = "block";
+    document.getElementById("game-board").style.display = "none";
+}
 
-        const table = document.createElement('table');
-        const headerRow = document.createElement('tr');
-
-        // Create category headers
-        Object.keys(categories).forEach(category => {
-            const th = document.createElement('th');
-            th.textContent = category;
-            headerRow.appendChild(th);
-        });
-        table.appendChild(headerRow);
-
-        // Create point value buttons for each category
-        [100, 200, 300, 400, 500].forEach(points => {
-            const row = document.createElement('tr');
-            Object.keys(categories).forEach(category => {
-                const cell = document.createElement('td');
-                const button = document.createElement('button');
-                button.textContent = points;
-                button.onclick = () => selectQuestion(category, points);
-                cell.appendChild(button);
-                row.appendChild(cell);
-            });
-            table.appendChild(row);
-        });
-
-        gameBoard.appendChild(table);
-    }
-
-    function selectQuestion(category, points) {
-        const questionPool = categories[category][points];
-        currentQuestion = questionPool[Math.floor(Math.random() * questionPool.length)];
-
-        document.getElementById("question-text").textContent = currentQuestion.question;
-        document.getElementById("answer-text").textContent = currentQuestion.answer;
-        gameBoard.classList.add("hidden");
-        questionDisplay.classList.remove("hidden");
-
-        document.getElementById("show-answer").onclick = () => {
-            document.getElementById("answer-text").classList.remove("hidden");
-        };
-
-        document.getElementById("correct").onclick = () => handleScore(true);
-        document.getElementById("incorrect").onclick = () => handleScore(false);
-    }
-
-    function handleScore(isCorrect) {
-        if (isCorrect) {
-            teamScores.team1 += currentQuestion.points; // adjust for team selection logic
-        }
-        updateScoreboard();
-        resetBoard();
-    }
-
-    function updateScoreboard() {
-        document.getElementById("team1-score").textContent = teamScores.team1;
-        document.getElementById("team2-score").textContent = teamScores.team2;
-    }
-
-    function resetBoard() {
-        questionDisplay.classList.add("hidden");
-        document.getElementById("answer-text").classList.add("hidden");
-        gameBoard.classList.remove("hidden");
-    }
+// Show answer when "Show Answer" button is clicked
+document.getElementById("answer-button").addEventListener("click", () => {
+    document.getElementById("answer-text").innerText = currentQuestion.answer;
+    document.getElementById("answer-text").style.display = "block";
+    document.getElementById("answer-button").style.display = "none";
 });
+
+// Handle correct and incorrect answer
+document.getElementById("correct-button").addEventListener("click", () => {
+    updateScore(true);
+    endQuestion();
+});
+document.getElementById("incorrect-button").addEventListener("click", () => {
+    updateScore(false);
+    endQuestion();
+});
+
+// Update score based on correct or incorrect answer
+function updateScore(isCorrect) {
+    const points = parseInt(currentQuestion.pointValue);
+    const teamKey = isCorrect ? "team1" : "team2";
+    teamScores[teamKey] += points;
+    document.getElementById(`${teamKey}-score`).querySelector("span").innerText = teamScores[teamKey];
+}
+
+// End question display and return to game board
+function endQuestion() {
+    document.getElementById("question-display").style.display = "none";
+    document.getElementById("game-board").style.display = "block";
+}
