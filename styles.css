@@ -2,48 +2,53 @@ body {
     background-color: #861F41;
     color: #F2A900;
     font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
 }
 
-.container {
-    text-align: center;
-    margin: 20px;
+.header {
+    margin-top: 20px;
+    font-size: 2em;
 }
 
-.team-input {
-    margin-bottom: 20px;
-}
-
-.team-scores {
+.team-names, #scoreboard {
     display: flex;
     justify-content: space-between;
-    margin: 20px;
+    width: 100%;
+    max-width: 800px;
+    margin: 10px 0;
 }
 
-.team-score {
-    width: 45%;
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 20px;
 }
 
-.categories {
-    display: none;
-}
-
-.categoryButton {
+.category, .question-button {
     background-color: #F2A900;
     color: #861F41;
+    padding: 15px;
+    text-align: center;
+    font-size: 1.2em;
     border: none;
-    padding: 10px;
-    margin: 5px;
     cursor: pointer;
 }
 
-#responseButtons {
-    margin-top: 20px;
+.question-button:disabled {
+    background-color: #ccc;
+    color: #555;
+    cursor: not-allowed;
 }
 
-button {
-    margin: 5px;
+#question-display {
+    margin-top: 20px;
+    text-align: center;
 }
 
-#answerButton {
-    margin-top: 20px;
+.hidden {
+    display: none;
 }
