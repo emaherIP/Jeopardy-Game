@@ -4,11 +4,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const categories = ["Math", "Science", "History", "Literature", "Geography"];
     const pointValues = [100, 200, 300, 400, 500];
 
-    // Fetch and load questions
-    fetch('questions.csv')
-        .then(response => response.text())
-        .then(data => loadQuestions(data))
-        .catch(error => console.error('Error loading CSV:', error));
+    // Initialize elements
+    const teamSetup = document.getElementById("team-setup");
+    const scoreboard = document.getElementById("scoreboard");
+    const gameBoard = document.getElementById("game-board");
+    const questionDisplay = document.getElementById("question-display");
+
+    // Start game
+    document.getElementById("start-game").onclick = () => {
+        // Set team names
+        document.getElementById("team1-name").textContent = document.getElementById("team1-name-input").value || "Team 1";
+        document.getElementById("team2-name").textContent = document.getElementById("team2-name-input").value || "Team 2";
+
+        // Hide team setup and show scoreboard and game board
+        teamSetup.classList.add("hidden");
+        scoreboard.classList.remove("hidden");
+
+        // Load CSV and render board
+        fetch('questions.csv')
+            .then(response => response.text())
+            .then(data => loadQuestions(data))
+            .catch(error => console.error('Error loading CSV:', error));
+    };
 
     function loadQuestions(csvData) {
         const questions = parseCSV(csvData);
@@ -16,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function parseCSV(data) {
-        const rows = data.split('\n').slice(1); // Remove header
+        const rows = data.split('\n').slice(1);
         const questions = {};
         rows.forEach(row => {
             const [category, points, question, answer] = row.split(',');
@@ -28,8 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderBoard(categories, pointValues, questions) {
-        const gameBoard = document.getElementById("game-board");
         gameBoard.innerHTML = '';
+        gameBoard.classList.remove("hidden");
 
         categories.forEach(category => {
             const categoryDiv = document.createElement('div');
@@ -50,13 +67,12 @@ document.addEventListener("DOMContentLoaded", () => {
     function displayQuestion(category, points, questions) {
         const questionPool = questions[category][points];
         currentQuestion = questionPool[Math.floor(Math.random() * questionPool.length)];
-
+        
         document.getElementById("question-text").textContent = currentQuestion.question;
         document.getElementById("answer-text").textContent = currentQuestion.answer;
-        document.getElementById("question-display").classList.remove("hidden");
+        questionDisplay.classList.remove("hidden");
 
-        // Hide buttons after selection
-        document.querySelectorAll('.question-button').forEach(btn => btn.disabled = true);
+        gameBoard.classList.add("hidden");
     }
 
     document.getElementById("show-answer").onclick = () => {
@@ -64,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     document.getElementById("correct").onclick = () => {
-        teamScores.team1 += parseInt(currentQuestion.points); // Example for team1
+        teamScores.team1 += parseInt(currentQuestion.points);
         updateScores();
         resetBoard();
     };
@@ -79,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function resetBoard() {
-        document.getElementById("question-display").classList.add("hidden");
-        document.querySelectorAll('.question-button').forEach(btn => btn.disabled = false);
+        questionDisplay.classList.add("hidden");
+        gameBoard.classList.remove("hidden");
     }
 });
