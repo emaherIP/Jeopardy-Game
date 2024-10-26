@@ -68,3 +68,14 @@ button:disabled {
     font-size: 1.2em;
     margin: 10px;
 }
+
+#team-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+#team-buttons button {
+    display: none; /* Hidden until a question is shown */
+}
