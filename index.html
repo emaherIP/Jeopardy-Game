@@ -9,29 +9,40 @@
 <body>
     <h1>Jeopardy Game</h1>
 
-    <!-- Team Input and Start Game Button -->
+    <!-- Team Setup -->
     <div id="team-setup">
-        <input type="text" id="team1-name-input" placeholder="Enter Team 1 Name">
-        <input type="text" id="team2-name-input" placeholder="Enter Team 2 Name">
+        <input type="text" id="team1-name" placeholder="Team 1 Name">
+        <input type="text" id="team2-name" placeholder="Team 2 Name">
         <button id="start-game">Start Game</button>
     </div>
 
     <!-- Scoreboard -->
-    <div id="scoreboard" class="hidden">
-        <span id="team1-name">Team 1</span>: <span id="team1-score">0</span> |
-        <span id="team2-name">Team 2</span>: <span id="team2-score">0</span>
+    <div id="scoreboard">
+        <div id="team1-score">Team 1: <span>0</span></div>
+        <div id="team2-score">Team 2: <span>0</span></div>
     </div>
 
-    <!-- Game Board -->
-    <div id="game-board" class="hidden"></div>
+    <!-- Game Board (Hidden until game starts) -->
+    <div id="game-board" style="display: none;">
+        <table>
+            <thead>
+                <tr id="category-row">
+                    <!-- Categories will be populated here -->
+                </tr>
+            </thead>
+            <tbody id="points-grid">
+                <!-- Points grid will be populated here -->
+            </tbody>
+        </table>
+    </div>
 
-    <!-- Question Display -->
-    <div id="question-display" class="hidden">
+    <!-- Question and Answer Display (Hidden until a question is selected) -->
+    <div id="question-display" style="display: none;">
         <p id="question-text"></p>
-        <button id="show-answer">Show Answer</button>
-        <p id="answer-text" class="hidden"></p>
-        <button id="correct">Correct</button>
-        <button id="incorrect">Incorrect</button>
+        <button id="answer-button">Show Answer</button>
+        <p id="answer-text" style="display: none;"></p>
+        <button id="correct-button">Correct</button>
+        <button id="incorrect-button">Incorrect</button>
     </div>
 
     <script src="app.js"></script>
