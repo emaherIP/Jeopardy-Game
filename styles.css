@@ -1,24 +1,21 @@
 body {
+    font-family: Arial, sans-serif;
     background-color: #861F41;
     color: #F2A900;
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0;
+    text-align: center;
 }
 
-.header {
-    margin-top: 20px;
-    font-size: 2em;
+button {
+    background-color: #F2A900;
+    color: #861F41;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
 }
 
-.team-names, #scoreboard {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 800px;
-    margin: 10px 0;
+#team-setup, #scoreboard {
+    margin: 20px;
 }
 
 #game-board {
@@ -31,22 +28,8 @@ body {
 .category, .question-button {
     background-color: #F2A900;
     color: #861F41;
-    padding: 15px;
-    text-align: center;
+    padding: 10px;
     font-size: 1.2em;
-    border: none;
-    cursor: pointer;
-}
-
-.question-button:disabled {
-    background-color: #ccc;
-    color: #555;
-    cursor: not-allowed;
-}
-
-#question-display {
-    margin-top: 20px;
-    text-align: center;
 }
 
 .hidden {
