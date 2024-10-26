@@ -77,10 +77,13 @@ function showQuestion(category, pointValue) {
     const questionData = questions[category][pointValue];
     const randomIndex = Math.floor(Math.random() * questionData.length);
     currentQuestion = questionData[randomIndex];
+    currentQuestion.pointValue = pointValue;
     
     document.getElementById("question-text").innerText = currentQuestion.question;
     document.getElementById("answer-text").style.display = "none";
     document.getElementById("answer-button").style.display = "inline";
+    document.getElementById("team-buttons").style.display = "flex";
+    
     document.getElementById("question-display").style.display = "block";
     document.getElementById("game-board").style.display = "none";
 }
@@ -92,26 +95,36 @@ document.getElementById("answer-button").addEventListener("click", () => {
     document.getElementById("answer-button").style.display = "none";
 });
 
-// Handle correct and incorrect answer
-document.getElementById("correct-button").addEventListener("click", () => {
-    updateScore(true);
+// Handle correct and incorrect answer for each team
+document.getElementById("team1-correct").addEventListener("click", () => {
+    updateScore("team1", true);
     endQuestion();
 });
-document.getElementById("incorrect-button").addEventListener("click", () => {
-    updateScore(false);
+document.getElementById("team1-incorrect").addEventListener("click", () => {
+    updateScore("team1", false);
+    endQuestion();
+});
+document.getElementById("team2-correct").addEventListener("click", () => {
+    updateScore("team2", true);
+    endQuestion();
+});
+document.getElementById("team2-incorrect").addEventListener("click", () => {
+    updateScore("team2", false);
     endQuestion();
 });
 
 // Update score based on correct or incorrect answer
-function updateScore(isCorrect) {
-    const points = parseInt(currentQuestion.pointValue);
-    const teamKey = isCorrect ? "team1" : "team2";
-    teamScores[teamKey] += points;
-    document.getElementById(`${teamKey}-score`).querySelector("span").innerText = teamScores[teamKey];
+function updateScore(team, isCorrect) {
+    const scoreElement = document.getElementById(`${team}-score`).querySelector("span");
+    const currentScore = parseInt(scoreElement.innerText);
+    const scoreChange = isCorrect ? currentQuestion.pointValue : -currentQuestion.pointValue;
+    scoreElement.innerText = currentScore + scoreChange;
 }
 
-// End question display and return to game board
+// End question and reset display
 function endQuestion() {
     document.getElementById("question-display").style.display = "none";
     document.getElementById("game-board").style.display = "block";
+    document.getElementById("team-buttons").style.display = "none";
+    document.getElementById("answer-button").style.display = "none";
 }
