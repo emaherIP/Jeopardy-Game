@@ -12,9 +12,13 @@ function startGame() {
     document.getElementById("team1-score").innerText = `${team1Name}: 0`;
     document.getElementById("team2-score").innerText = `${team2Name}: 0`;
     
-    loadQuestionsFromCSV();
-    document.getElementById("game-board").style.display = "block";
-    document.getElementById("team-setup").style.display = "none";
+    loadQuestionsFromCSV()
+        .then(() => {
+            setupBoard();
+            document.getElementById("game-board").style.display = "block";
+            document.getElementById("team-setup").style.display = "none";
+        })
+        .catch(error => console.error("Error loading questions:", error));
 }
 
 // Load questions from CSV file
@@ -23,7 +27,6 @@ async function loadQuestionsFromCSV() {
         const response = await fetch("questions.csv");
         const data = await response.text();
         parseCSVData(data);
-        setupBoard();
     } catch (error) {
         console.error("Error loading CSV:", error);
     }
@@ -39,6 +42,8 @@ function parseCSVData(data) {
         const pointValue = cells[0];
         
         categories.forEach((category, index) => {
+            if (!cells[index + 1]) return;  // Skip if no data in this cell
+            
             const questionAnswer = cells[index + 1].split("|");
             const question = questionAnswer[0];
             const answer = questionAnswer[1];
@@ -64,6 +69,7 @@ function setupBoard() {
             const cell = document.createElement("td");
             const button = document.createElement("button");
             button.textContent = `$${pointValue}`;
+            button.disabled = !questions[category] || !questions[category][pointValue];
             button.onclick = () => showQuestion(category, pointValue);
             cell.appendChild(button);
             row.appendChild(cell);
@@ -75,6 +81,8 @@ function setupBoard() {
 // Display a question
 function showQuestion(category, pointValue) {
     const questionData = questions[category][pointValue];
+    if (!questionData) return;
+
     const randomIndex = Math.floor(Math.random() * questionData.length);
     currentQuestion = questionData[randomIndex];
     currentQuestion.pointValue = pointValue;
